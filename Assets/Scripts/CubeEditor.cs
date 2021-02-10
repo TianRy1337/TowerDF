@@ -1,0 +1,54 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+
+[ExecuteInEditMode]//編輯模式也持續運行
+[SelectionBase]
+[RequireComponent(typeof(WayPoint2))]
+public class CubeEditor : MonoBehaviour
+{
+    WayPoint2 waypoint ;
+    private void Awake() {
+        waypoint = GetComponent<WayPoint2>();
+    }
+
+    void Start()
+    {
+        
+    }
+
+    void Update()
+    {
+
+        SnapToGrid();
+        UpdateLabel();
+    
+    }
+
+    private void SnapToGrid()
+    {   //自定義Unity內移動
+        int gridSize = waypoint.GetGridSize();
+
+        transform.position = new Vector3(
+            waypoint.GetGridPos().x,
+            0,
+            waypoint.GetGridPos().y
+            );
+    }
+
+    private void UpdateLabel()
+    {
+        int gridSize = waypoint.GetGridSize();
+        //textMesh顯示
+        TextMesh textMesh = GetComponentInChildren<TextMesh>();
+
+        //物體名稱
+        string labelText = 
+            waypoint.GetGridPos().x / gridSize + 
+            "," + 
+            waypoint.GetGridPos().y / gridSize;
+        textMesh.text = labelText;
+        gameObject.name = labelText;
+    }
+}
