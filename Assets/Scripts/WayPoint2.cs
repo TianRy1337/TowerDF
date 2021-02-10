@@ -11,14 +11,12 @@ public class WayPoint2 : MonoBehaviour
         return gridSize;
     }
 
-    public Vector2 GetGridPos()
+    public Vector2Int GetGridPos()
     {
         return new Vector2Int(
             Mathf.RoundToInt(transform.position.x / gridSize) * gridSize,
             Mathf.RoundToInt(transform.position.z / gridSize) * gridSize
         );
-            
-    
     }
 }
 

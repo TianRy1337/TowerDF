@@ -40,7 +40,7 @@ public class CubeEditor : MonoBehaviour
     private void UpdateLabel()
     {
         int gridSize = waypoint.GetGridSize();
-        //textMesh顯示
+        //取得子物件裡的textMesh
         TextMesh textMesh = GetComponentInChildren<TextMesh>();
 
         //物體名稱
