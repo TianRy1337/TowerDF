@@ -8,6 +8,7 @@ using UnityEngine;
 [RequireComponent(typeof(WayPoint2))]
 public class CubeEditor : MonoBehaviour
 {
+
     WayPoint2 waypoint ;
     private void Awake() {
         waypoint = GetComponent<WayPoint2>();
@@ -31,9 +32,9 @@ public class CubeEditor : MonoBehaviour
         int gridSize = waypoint.GetGridSize();
 
         transform.position = new Vector3(
-            waypoint.GetGridPos().x,
+            waypoint.GetGridPos().x * gridSize,
             0,
-            waypoint.GetGridPos().y
+            waypoint.GetGridPos().y * gridSize
             );
     }
 
@@ -45,9 +46,9 @@ public class CubeEditor : MonoBehaviour
 
         //物體名稱
         string labelText = 
-            waypoint.GetGridPos().x / gridSize + 
+            waypoint.GetGridPos().x  + 
             "," + 
-            waypoint.GetGridPos().y / gridSize;
+            waypoint.GetGridPos().y ;
         textMesh.text = labelText;
         gameObject.name = labelText;
     }
