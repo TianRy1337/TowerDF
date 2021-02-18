@@ -8,10 +8,12 @@ public class Pathfinder : MonoBehaviour
     public WayPoint2 startWayPoint, endWayPoint;
     Dictionary<Vector2Int, WayPoint2> grid = new Dictionary<Vector2Int, WayPoint2>();
     Queue<WayPoint2> queue = new Queue<WayPoint2>();
-    [SerializeField]bool isRunning = true;
-
+    bool isRunning = true;
+    WayPoint2 searchCenter;
+    List<WayPoint2> path = new List<WayPoint2>();
 
     Vector2Int[] directions = {
+        //NOTE:
         // new Vector2Int(0,1),//Top
         // new Vector2Int(0,-1),//Down
         // new Vector2Int(1,0),//right
@@ -22,35 +24,54 @@ public class Pathfinder : MonoBehaviour
         Vector2Int.left
     };
 
-    void Start()
+    public List<WayPoint2> GetPath()
     {
         LoadBlocks();
         ColorStartAndEnd();
-        PathFind();
+        BreathFirstSearch();
+        CreatePath();
+        return path;
+    }
+
+    void Start()
+    {
         //ExploreNeighbours();
     }
 
-    private void PathFind()
+    private void CreatePath()
+    {
+        path.Add(endWayPoint);
+        WayPoint2 previous = endWayPoint.exploredFrom;
+        while(previous != startWayPoint)
+        {
+            path.Add(previous);
+            previous = previous.exploredFrom;
+        }
+        path.Add(startWayPoint);
+        path.Reverse();
+    }
+
+    private void BreathFirstSearch()
     {
         queue.Enqueue(startWayPoint);
 
         while (queue.Count > 0 && isRunning)
         {
-            var searchCenter = queue.Dequeue();
-            print("Serching From :" + searchCenter);
-            HaltIfEndFound(searchCenter);
-            ExploreNeighbours(searchCenter);
+            searchCenter = queue.Dequeue();
+            //print("Serching From :" + searchCenter); //方便判斷目前從哪個點找尋到哪個點
+            HaltIfEndFound();
+            ExploreNeighbours();
             searchCenter.isExplored = true;
             
         }
         print("Finished Pathfinding ?");
     }
 
-    private void HaltIfEndFound(WayPoint2 searchCenter)
+    private void HaltIfEndFound()
     {
         if (searchCenter == endWayPoint)
         {
-            print("Searching From end node ,therefore stopping");
+            //print("Searching From end node ,therefore stopping");
             isRunning = false;
         }
     }
@@ -77,29 +98,27 @@ public class Pathfinder : MonoBehaviour
     //改變起點與終點顏色
     private void ColorStartAndEnd()
     {
+        //TODO: 考慮移除掉此功能
         startWayPoint.SetTopColor(Color.green);
         endWayPoint.SetTopColor(Color.red);
     }
     //找到點的上下左右
-    private void ExploreNeighbours(WayPoint2 from)
+    private void ExploreNeighbours()
     {
         if(!isRunning){return;}
         foreach (Vector2Int direction in directions)
         {
+            //NOTE:
             //這邊會特地新增一個Vector2Int變數的原因是
             //如果單純用print("Exploring" +startWayPoint.GetGridPos() + direction);
             //系統會判定他是 "Exploring" + "startWayPoint.GetGridPos()" +"direction" 共三個字串連接
             //但這樣不是我們想要的結果，故改成下面這樣
             
-            Vector2Int neighbourCoordinates = from.GetGridPos() + direction;
+            Vector2Int neighbourCoordinates = searchCenter.GetGridPos() + direction;
             //print("Exploring" + neighbourCoordinates);
-            try
+            if(grid.ContainsKey(neighbourCoordinates))
             {
                 QueueNewNeighbours(neighbourCoordinates);
-            }
-            catch
-            {
-                //do nothing
             }
         }
     }
@@ -107,14 +126,14 @@ public class Pathfinder : MonoBehaviour
     private void QueueNewNeighbours(Vector2Int neighbourCoordinates)
     {
         WayPoint2 neighbour = grid[neighbourCoordinates];
-        if(neighbour.isExplored)
+        if(neighbour.isExplored || queue.Contains(neighbour))
         {
         }
         else
         {
-            neighbour.SetTopColor(Color.blue);
             queue.Enqueue(neighbour);
-            print("Queueing " + neighbour);
+            //print("Queueing " + neighbour);//方便判斷列隊現在到哪
+            neighbour.exploredFrom = searchCenter;//判斷該點是被誰找到的
         }
     }
 }

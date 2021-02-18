@@ -30,7 +30,6 @@ public class CubeEditor : MonoBehaviour
     private void SnapToGrid()
     {   //自定義Unity內移動
         int gridSize = waypoint.GetGridSize();
-
         transform.position = new Vector3(
             waypoint.GetGridPos().x * gridSize,
             0,
@@ -40,7 +39,6 @@ public class CubeEditor : MonoBehaviour
 
     private void UpdateLabel()
     {
-        int gridSize = waypoint.GetGridSize();
         //取得子物件裡的textMesh
         TextMesh textMesh = GetComponentInChildren<TextMesh>();
 
