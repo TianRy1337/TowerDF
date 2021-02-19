@@ -38,7 +38,7 @@ public class WayPoint2 : MonoBehaviour
     }
     public void SetTopColor(Color color)
     {
-        MeshRenderer topMeshRenderer = transform.Find("Top").GetComponent<MeshRenderer>();
+        MeshRenderer topMeshRenderer = transform.Find("Top").GetComponent<MeshRenderer>();// find a child of a game object the current script is attached to by name, looking only one level deep
         topMeshRenderer.material.color = color;
     }
 }
