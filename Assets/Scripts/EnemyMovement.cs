@@ -21,7 +21,7 @@ public class EnemyMovement : MonoBehaviour
         {
             transform.position = waypoint.transform.position; //new Vector3(waypoint.transform.position.x, waypoint.transform.position.y + 10f, waypoint.transform.position.z);
             //print("Visiting Block :" +waypoint.name);
-            yield return new WaitForSecondsRealtime(1);
+            yield return new WaitForSecondsRealtime(2);
         }
     }
 
