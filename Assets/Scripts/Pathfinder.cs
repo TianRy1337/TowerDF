@@ -26,11 +26,18 @@ public class Pathfinder : MonoBehaviour
 
     public List<WayPoint2> GetPath()
     {
+        if(path.Count==0)//沒有被存取過
+        {
+            CalculatePath();
+        }
+        return path;
+    }
+    void CalculatePath()
+    {
         LoadBlocks();
         ColorStartAndEnd();
-        BreathFirstSearch();
+        BreathFirstSearch();            
         CreatePath();
-        return path;
     }
 
     void Start()
@@ -40,15 +47,21 @@ public class Pathfinder : MonoBehaviour
 
     private void CreatePath()
     {
-        path.Add(endWayPoint);
+        SetAsPath(endWayPoint);
         WayPoint2 previous = endWayPoint.exploredFrom;
         while(previous != startWayPoint)
         {
-            path.Add(previous);
+            SetAsPath(previous);
             previous = previous.exploredFrom;
         }
-        path.Add(startWayPoint);
+        SetAsPath(startWayPoint);
         path.Reverse();
+    }
+
+    private void SetAsPath(WayPoint2 wayPoint)
+    {
+        path.Add(wayPoint);
+        wayPoint.isPlaceable = false;
     }
 
     private void BreathFirstSearch()
