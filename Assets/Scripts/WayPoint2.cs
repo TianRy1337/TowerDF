@@ -46,7 +46,7 @@ public class WayPoint2 : MonoBehaviour
         {
             if(isPlaceable)
             {
-                print(gameObject.name+"tower Placement");
+                FindObjectOfType<TowerFactory>().AddTower(this);
             }
             else
             {
