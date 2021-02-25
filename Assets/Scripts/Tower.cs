@@ -11,6 +11,8 @@ public class Tower : MonoBehaviour
     [SerializeField] ParticleSystem projectileParticle;
     [SerializeField] float distaceToEnemy;
 
+    public WayPoint2 baseWayPoint;
+
     Transform targetEnemy;
 
     // Start is called before the first frame update

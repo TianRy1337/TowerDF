@@ -6,29 +6,51 @@ public class TowerFactory : MonoBehaviour
 {
     [SerializeField] Tower towerPrefab;
     [SerializeField] int towerLimits = 5;
+    [SerializeField] Transform towerParentTransform;
+
+    Queue<Tower> towerQueue = new Queue<Tower>();
+    
+
     // Start is called before the first frame update
     public void AddTower(WayPoint2 baseWaypoint)
     {
-        var towers = FindObjectsOfType<Tower>();
-        int numTowers = towers.Length;
+        int numTowers = towerQueue.Count;
+
         if (numTowers < towerLimits)
         {
             InstantiateNewTower(baseWaypoint);
         }
         else
         {
-            MoveExistingTower();
+            MoveExistingTower(baseWaypoint);
         }
 
     }
     private void InstantiateNewTower(WayPoint2 baseWaypoint)
     {
-        Instantiate(towerPrefab, baseWaypoint.transform.position, Quaternion.identity);
+        var newTower = Instantiate(towerPrefab, baseWaypoint.transform.position, Quaternion.identity);
+        newTower.transform.parent = towerParentTransform.transform;
         baseWaypoint.isPlaceable = false;
+        newTower.baseWayPoint = baseWaypoint;
+        towerQueue.Enqueue(newTower);
+        
     }
-    private static void MoveExistingTower()
+    private void MoveExistingTower(WayPoint2 newBaseWaypoint)
     {
-        Debug.Log("Not add More Tower");
+        var oldTower = towerQueue.Dequeue();
+        towerQueue.Enqueue(oldTower);
+        oldTower.baseWayPoint.isPlaceable= true;
+        newBaseWaypoint.isPlaceable = false;
 
+        oldTower.baseWayPoint = newBaseWaypoint;
+        oldTower.transform.position = newBaseWaypoint.transform.position;
+    }
+
+    //NOTE:除錯用
+    private void Update() {
+        if(Input.GetKeyDown(KeyCode.D))
+        {
+            print(towerQueue.Count);
+        }
     }
 }
