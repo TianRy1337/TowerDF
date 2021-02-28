@@ -5,23 +5,14 @@ using UnityEngine;
 
 public class Tower : MonoBehaviour
 {
-    [SerializeField] Transform objectToPan;
     [Range(10, 50)]
     [SerializeField] float attackRange;
-    [SerializeField] ParticleSystem projectileParticle;
     [SerializeField] float distaceToEnemy;
-
+    [SerializeField] ParticleSystem projectileParticle;
+    [SerializeField] Transform objectToPan;
     public WayPoint2 baseWayPoint;
-
     Transform targetEnemy;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
     void Update()
     {
         SetTargetEnemy();
@@ -54,13 +45,8 @@ public class Tower : MonoBehaviour
     {
         var disToA = Vector3.Distance(transform.position, transformA.position);
         var disToB = Vector3.Distance(transform.position, transformB.position);
-
-        if (disToA > disToB)
-        {
-            return transformB;
-        }
+        if (disToA > disToB) { return transformB; }
         else { return transformA; }
-
     }
 
     void FireAtEnemy()
@@ -76,8 +62,9 @@ public class Tower : MonoBehaviour
         {
             Shoot(false);
         }
-        //print("I'm " + gameObject.name +" My Distance to Enemy is "+ Vector3.Distance(tower, enemy));
+
     }
+
     void Shoot(bool isActive)
     {
         var emissonModule = projectileParticle.emission;

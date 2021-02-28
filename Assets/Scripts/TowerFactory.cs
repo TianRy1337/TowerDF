@@ -7,11 +7,8 @@ public class TowerFactory : MonoBehaviour
     [SerializeField] Tower towerPrefab;
     [SerializeField] int towerLimits = 5;
     [SerializeField] Transform towerParentTransform;
-
     Queue<Tower> towerQueue = new Queue<Tower>();
     
-
-    // Start is called before the first frame update
     public void AddTower(WayPoint2 baseWaypoint)
     {
         int numTowers = towerQueue.Count;
@@ -26,6 +23,7 @@ public class TowerFactory : MonoBehaviour
         }
 
     }
+
     private void InstantiateNewTower(WayPoint2 baseWaypoint)
     {
         var newTower = Instantiate(towerPrefab, baseWaypoint.transform.position, Quaternion.identity);
@@ -35,6 +33,7 @@ public class TowerFactory : MonoBehaviour
         towerQueue.Enqueue(newTower);
         
     }
+    
     private void MoveExistingTower(WayPoint2 newBaseWaypoint)
     {
         var oldTower = towerQueue.Dequeue();
@@ -44,13 +43,5 @@ public class TowerFactory : MonoBehaviour
 
         oldTower.baseWayPoint = newBaseWaypoint;
         oldTower.transform.position = newBaseWaypoint.transform.position;
-    }
-
-    //NOTE:除錯用
-    private void Update() {
-        if(Input.GetKeyDown(KeyCode.D))
-        {
-            print(towerQueue.Count);
-        }
     }
 }

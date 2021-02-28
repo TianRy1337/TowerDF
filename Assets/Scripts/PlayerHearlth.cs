@@ -8,7 +8,6 @@ public class PlayerHearlth : MonoBehaviour
     [SerializeField] int hpDecrease = 1;
     [SerializeField] Text HealthText;
     [SerializeField] AudioClip playerDamageSFX;
-
     
     private void Start() 
     {

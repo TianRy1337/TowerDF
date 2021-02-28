@@ -12,7 +12,7 @@ public class Pathfinder : MonoBehaviour
     WayPoint2 searchCenter;
     List<WayPoint2> path = new List<WayPoint2>();
 
-    Vector2Int[] directions = {
+    Vector2Int[] directions ={
         //NOTE:
         // new Vector2Int(0,1),//Top
         // new Vector2Int(0,-1),//Down
@@ -32,17 +32,45 @@ public class Pathfinder : MonoBehaviour
         }
         return path;
     }
-    void CalculatePath()
+
+    private void CalculatePath()
     {
         LoadBlocks();
-        ColorStartAndEnd();
         BreathFirstSearch();            
         CreatePath();
     }
 
-    void Start()
+    private void LoadBlocks()
     {
-        //ExploreNeighbours();
+        var waypoints = FindObjectsOfType<WayPoint2>();
+        foreach (WayPoint2 waypoint in waypoints)
+        {
+            //寫入及判斷方塊是否重疊
+            bool isOverlapping = grid.ContainsKey(waypoint.GetGridPos());
+            if (isOverlapping)
+            {
+                Debug.Log("Overlapping Block" + waypoint);
+            }
+            else
+            {
+                grid.Add(waypoint.GetGridPos(), waypoint);
+            }
+
+        }
+    }
+
+    private void BreathFirstSearch()
+    {
+        queue.Enqueue(startWayPoint);
+
+        while (queue.Count > 0 && isRunning)
+        {
+            searchCenter = queue.Dequeue();
+            HaltIfEndFound();
+            ExploreNeighbours();
+            searchCenter.isExplored = true;
+            
+        }
     }
 
     private void CreatePath()
@@ -64,59 +92,15 @@ public class Pathfinder : MonoBehaviour
         wayPoint.isPlaceable = false;
     }
 
-    private void BreathFirstSearch()
-    {
-        queue.Enqueue(startWayPoint);
-
-        while (queue.Count > 0 && isRunning)
-        {
-            searchCenter = queue.Dequeue();
-            //print("Serching From :" + searchCenter); //方便判斷目前從哪個點找尋到哪個點
-            HaltIfEndFound();
-            ExploreNeighbours();
-            searchCenter.isExplored = true;
-            
-        }
-        print("Finished Pathfinding ?");
-    }
-
     private void HaltIfEndFound()
     {
         if (searchCenter == endWayPoint)
         {
-            //print("Searching From end node ,therefore stopping");
             isRunning = false;
         }
     }
-
-    private void LoadBlocks()
-    {
-        var waypoints = FindObjectsOfType<WayPoint2>();
-        foreach (WayPoint2 waypoint in waypoints)
-        {
-            //寫入及判斷方塊是否重疊
-            bool isOverlapping = grid.ContainsKey(waypoint.GetGridPos());
-            if (isOverlapping)
-            {
-                Debug.Log("Overlapping Block" + waypoint);
-            }
-            else
-            {
-                grid.Add(waypoint.GetGridPos(), waypoint);
-                //waypoint.SetTopColor(Color.black);
-            }
-
-        }
-    }
-    //改變起點與終點顏色
-    private void ColorStartAndEnd()
-    {
-        //TODO: 考慮移除掉此功能
-        startWayPoint.SetTopColor(Color.green);
-        endWayPoint.SetTopColor(Color.red);
-    }
-    //找到點的上下左右
-    private void ExploreNeighbours()
+    
+    private void ExploreNeighbours()//找到點的上下左右
     {
         if(!isRunning){return;}
         foreach (Vector2Int direction in directions)
@@ -126,9 +110,7 @@ public class Pathfinder : MonoBehaviour
             //如果單純用print("Exploring" +startWayPoint.GetGridPos() + direction);
             //系統會判定他是 "Exploring" + "startWayPoint.GetGridPos()" +"direction" 共三個字串連接
             //但這樣不是我們想要的結果，故改成下面這樣
-            
             Vector2Int neighbourCoordinates = searchCenter.GetGridPos() + direction;
-            //print("Exploring" + neighbourCoordinates);
             if(grid.ContainsKey(neighbourCoordinates))
             {
                 QueueNewNeighbours(neighbourCoordinates);
@@ -139,13 +121,10 @@ public class Pathfinder : MonoBehaviour
     private void QueueNewNeighbours(Vector2Int neighbourCoordinates)
     {
         WayPoint2 neighbour = grid[neighbourCoordinates];
-        if(neighbour.isExplored || queue.Contains(neighbour))
-        {
-        }
+        if(neighbour.isExplored || queue.Contains(neighbour)){}
         else
         {
             queue.Enqueue(neighbour);
-            //print("Queueing " + neighbour);//方便判斷列隊現在到哪
             neighbour.exploredFrom = searchCenter;//判斷該點是被誰找到的
         }
     }

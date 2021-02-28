@@ -33,11 +33,11 @@ public class EnemySpawner : MonoBehaviour
         }
 
     }
+
     public void AddEnemyText()
     {
         numEnemies++;
         spawnEnemies.text = numEnemies.ToString();
     }
-
 
 }

@@ -14,14 +14,11 @@ public class EnemyMovement : MonoBehaviour
         StartCoroutine(FollowPath(path));
     }
 
-
     IEnumerator FollowPath(List<WayPoint2>path)
     {
-
         foreach (WayPoint2 waypoint in path)
         {
-            transform.position = waypoint.transform.position; //new Vector3(waypoint.transform.position.x, waypoint.transform.position.y + 10f, waypoint.transform.position.z);
-            //print("Visiting Block :" +waypoint.name);
+            transform.position = waypoint.transform.position;
             yield return new WaitForSecondsRealtime(movementPeriod);
         }
         SelfDestruct();

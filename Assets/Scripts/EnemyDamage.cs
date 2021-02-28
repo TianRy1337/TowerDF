@@ -20,14 +20,13 @@ public class EnemyDamage : MonoBehaviour
 
     private void OnParticleCollision(GameObject other)
     {
-        
         ProcessHit();
         if(hitPoints <=0)
         {
             KillEnemy();
         }
-
     }
+
     void ProcessHit()
     { 
         hitPoints -= 1;
@@ -35,6 +34,7 @@ public class EnemyDamage : MonoBehaviour
         HitParticlePrefab.Play();
         //print("I'm Hit,Now My Hp is "+hitPoints);
     }
+    
     void KillEnemy()
     {
         var vfx = Instantiate(DiedParticlePrefab,transform.position,Quaternion.identity);

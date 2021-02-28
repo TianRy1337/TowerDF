@@ -2,21 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 [ExecuteInEditMode]//編輯模式也持續運行
 [SelectionBase]
 [RequireComponent(typeof(WayPoint2))]
 public class CubeEditor : MonoBehaviour
 {
-
     WayPoint2 waypoint ;
-    private void Awake() {
-        waypoint = GetComponent<WayPoint2>();
-    }
-
-    void Start()
+    private void Awake() 
     {
-        
+        waypoint = GetComponent<WayPoint2>();
     }
 
     void Update()
@@ -39,9 +33,8 @@ public class CubeEditor : MonoBehaviour
 
     private void UpdateLabel()
     {
-        //取得子物件裡的textMesh
+        //取得子物件裡的textMesh 把座標文字關掉會報錯但不影響運行
         TextMesh textMesh = GetComponentInChildren<TextMesh>();
-
         //物體名稱
         string labelText = 
             waypoint.GetGridPos().x  + 

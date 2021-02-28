@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class WayPoint2 : MonoBehaviour
 {
-    [SerializeField] Color exploredColor;
-
     //public ok here as is a data class
     public bool isExplored = false;
     public WayPoint2 exploredFrom;//協助判斷該點是被誰找到的，以便加入路徑
@@ -19,16 +17,6 @@ public class WayPoint2 : MonoBehaviour
         return gridSize;
     }
 
-    //FIXME:設定被尋找過的顏色但也會將起點與終點的顏色也蓋過
-    // private void Update() 
-    // {
-    //     if(isExplored)
-    //     {
-    //         SetTopColor(exploredColor);
-    //     } 
-    // }
-
-
     public Vector2Int GetGridPos()
     {
         return new Vector2Int(
@@ -36,12 +24,9 @@ public class WayPoint2 : MonoBehaviour
             Mathf.RoundToInt(transform.position.z / gridSize)
         );
     }
-    public void SetTopColor(Color color)
+
+    private void OnMouseOver() 
     {
-        MeshRenderer topMeshRenderer = transform.Find("Top").GetComponent<MeshRenderer>();// find a child of a game object the current script is attached to by name, looking only one level deep
-        topMeshRenderer.material.color = color;
-    }
-    private void OnMouseOver() {
         if(Input.GetMouseButtonDown(0))
         {
             if(isPlaceable)
@@ -54,6 +39,14 @@ public class WayPoint2 : MonoBehaviour
             }
         }
     }
+
+    // public void SetTopColor(Color color)
+    // {
+    //     NOTE:find a child of a game object the current script is attached to by name, looking only one level deep 
+    //     MeshRenderer topMeshRenderer = transform.Find("Top").GetComponent<MeshRenderer>(); 
+    //     topMeshRenderer.material.color = color;
+    // }
+    //上面這段程式碼當初是拿來設定被尋找過的路徑的，更新WayPoint外觀後就沒用了
 
 }
 
